@@ -1,36 +1,30 @@
-def move_disk(source, target, disks, intermediate, steps):
-    if disks == 1:
-        target.append(source.pop())
-        steps.append(f"Перемістити диск з {source.name} на {target.name}: {target[-1]}")
+
+def move_disk(source, target, source_name, target_name, steps):
+    disk = source[-1]
+    source.pop()
+    target.append(disk)
+    steps.append(f"Перемістити диск з {source_name} на {target_name}: {disk}")
+
+def hanoi(n, source, target, intermediate, source_name, target_name, intermediate_name, steps):
+    if n == 1:
+        move_disk(source, target, source_name, target_name, steps)
     else:
-        move_disk(source, intermediate, disks - 1, target, steps)
-        move_disk(source, target, 1, intermediate, steps)
-        move_disk(intermediate, target, disks - 1, source, steps)
-
-class Peg(list):
-    def __init__(self, name):
-        super().__init__()
-        self.name = name
-
-def hanoi(n, pegs):
-    for disk in range(n, 0, -1):
-        pegs[0].append(disk)
-    
-    steps = []
-    move_disk(pegs[0], pegs[2], n, pegs[1], steps)
-
-    return steps, pegs
+        hanoi(n - 1, source, intermediate, target, source_name, intermediate_name, target_name, steps)
+        move_disk(source, target, source_name, target_name, steps)
+        hanoi(n - 1, intermediate, target, source, intermediate_name, target_name, source_name, steps)
 
 def main():
     n = int(input("Введіть кількість дисків: "))
-    pegs = [Peg('A'), Peg('B'), Peg('C')]
-    steps, pegs = hanoi(n, pegs)
-    print("Початковий стан:", {peg.name: list(peg) for peg in pegs})
+    source = list(range(n, 0, -1))
+    target = []
+    intermediate = []
+    steps = []
+    hanoi(n, source, target, intermediate, 'A', 'C', 'B', steps)
+    print("Початковий стан:", {'A': source, 'B': intermediate, 'C': target})
     for i, step in enumerate(steps):
-        print(f"Проміжний стан ({i+1}):", {peg.name: list(peg) for peg in pegs})
+        print(f"Проміжний стан ({i+1}):", {'A': source, 'B': intermediate, 'C': target})
         print(step)
-    print("Кінцевий стан:", {peg.name: list(peg) for peg in pegs})
+    print("Кінцевий стан:", {'A': source, 'B': intermediate, 'C': target})
 
 if __name__ == "__main__":
     main()
-
