@@ -1,4 +1,15 @@
 
+def visualize(pegs):
+    max_height = max(len(peg) for peg in pegs)
+    for level in range(max_height - 1, -1, -1):
+        for peg in pegs:
+            if level < len(peg):
+                disk_size = peg[level]
+                print(f"{'=' * disk_size:<3}", end="")
+            else:
+                print(" | ", end="")
+        print()
+
 def move_disk(source, target, source_name, target_name, steps):
     disk = source[-1]
     source.pop()
@@ -20,11 +31,19 @@ def main():
     intermediate = []
     steps = []
     hanoi(n, source, target, intermediate, 'A', 'C', 'B', steps)
-    print("Початковий стан:", {'A': source, 'B': intermediate, 'C': target})
+    print("Початковий стан:")
+    visualize([source, intermediate, target])
     for i, step in enumerate(steps):
-        print(f"Проміжний стан ({i+1}):", {'A': source, 'B': intermediate, 'C': target})
+        print(f"Проміжний стан ({i+1}):")
+        visualize([source, intermediate, target])
         print(step)
-    print("Кінцевий стан:", {'A': source, 'B': intermediate, 'C': target})
+        if i < len(steps) - 1:
+            print()
+    print("Кінцевий стан:")
+    visualize([source, intermediate, target])
 
 if __name__ == "__main__":
     main()
+
+
+
